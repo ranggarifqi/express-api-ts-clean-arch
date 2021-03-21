@@ -1,38 +1,55 @@
 import { Request, Response } from "express";
-import * as userUsecase from '../../../usecases/userUsecase';
-import { errorHandler } from '../../../shared/functions/error';
-import { ILoginUser, ISuccessResponse } from '../../../shared/interfaces';
+import { errorHandler } from "../../../shared/functions/error";
+import { DLoginUserDto, DUserUsecase } from "../../../domain/users";
+import { DSuccessResponse } from "../../../domain/common";
+import moduleLogger from "../../../shared/functions/logger";
 
-export const findUser = async (req: Request, res: Response) => {
-  try {
-    const filter = req.query;
-    const users = await userUsecase.findUsers(filter);
-    const response: ISuccessResponse = {
-      statusCode: 200,
-      message: 'Get user successful',
-      results: users
+const logger = moduleLogger("userController");
+
+export default class UserController {
+  private userUsecase: DUserUsecase;
+
+  constructor(userUsecase: DUserUsecase) {
+    this.userUsecase = userUsecase;
+  }
+
+  findUsers = () => {
+    return async (req: Request, res: Response) => {
+      logger.info("findUsers");
+      try {
+        const filter = req.query;
+        const users = await this.userUsecase.findUsers(filter);
+        const response: DSuccessResponse = {
+          statusCode: 200,
+          message: "Get user successful",
+          results: users,
+        };
+        return res.send(response);
+      } catch (error) {
+        logger.error(error);
+        return errorHandler(res, error);
+      }
     };
-    return res.send(response);
-  } catch (error) {
-    return errorHandler(res, error);
+  };
+
+  loginUser = () => {
+    return async (req: Request, res: Response) => {
+      logger.info("loginUser");
+      try {
+        const body = req.body as DLoginUserDto;
+
+        const loginRes = await this.userUsecase.login(body);
+
+        const response: DSuccessResponse = {
+          statusCode: 200,
+          message: "Login successful",
+          results: loginRes,
+        };
+        return res.send(response);
+      } catch (error) {
+        logger.error(error);
+        return errorHandler(res, error);
+      }
+    };
   }
 }
-
-export const loginUser = async (req: Request, res: Response) => {
-  try {
-    const body = req.body as ILoginUser;
-
-    const loginRes = await userUsecase.login(body);
-
-    console.log(loginRes)
-
-    const response: ISuccessResponse = {
-      statusCode: 200,
-      message: "Login successful",
-      results: loginRes
-    }
-    return res.send(response);
-  } catch (error) {
-    return errorHandler(res, error);
-  }
-};

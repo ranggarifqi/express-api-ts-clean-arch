@@ -1,16 +1,25 @@
 import { Express } from "express";
-import * as userController from "./userController";
-import { filterSchema, userLoginDto } from "../../../shared/dtos";
+import UserController from "./userController";
+// import { filterSchema, userLoginDto } from "../../../shared/dtos";
 import { DBConnection } from "../../../database";
 import { Server } from "../../../domain/server";
+import { UserRepository } from "../../../database/default/repository/userRepository";
+import { UserUsecase } from "../../../usecases/userUsecase";
 
-export default function (
+export default async function (
   server: Server<Express, DBConnection>,
   basePath: string
 ) {
-  const { app } = server;
-  app.get(basePath, userController.findUser);
-  app.post(basePath + "/login", userController.loginUser);
+  const { app, dbConn } = server;
+
+  const pgConn = await dbConn.getConnection();
+
+  const userRepository = new UserRepository(pgConn);
+  const userUsecase = new UserUsecase(userRepository);
+  const userController = new UserController(userUsecase);
+
+  app.get(basePath, userController.findUsers());
+  app.post(basePath + "/login", userController.loginUser());
 
   // server.route({
   //   method: "GET",

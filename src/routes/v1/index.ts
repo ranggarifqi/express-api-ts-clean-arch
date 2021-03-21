@@ -3,9 +3,9 @@ import { DBConnection } from "../../database";
 import { Server } from "../../domain/server";
 import createUserRoutes from "./users";
 
-export default function (
+export default async function (
   server: Server<Express, DBConnection>,
   basePath: string
 ) {
-  createUserRoutes(server, basePath + "/users");
+  await createUserRoutes(server, basePath + "/users");
 }
