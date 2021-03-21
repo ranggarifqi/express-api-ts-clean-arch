@@ -5,15 +5,15 @@ import {
   Unique,
   OneToMany,
 } from 'typeorm';
-import { RoleModel } from '../../../domain/roles';
-import { UserModel } from '../../../domain/users';
+import { DRole } from '../../../domain/roles';
+import { DUser } from '../../../domain/users';
 
 import { BaseTimestampWithSoftDelete } from './baseTimestamp';
 import User from './user';
 
 @Entity()
 @Unique(['name'])
-export default class Role extends BaseTimestampWithSoftDelete implements RoleModel {
+export default class Role extends BaseTimestampWithSoftDelete implements DRole {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -25,5 +25,5 @@ export default class Role extends BaseTimestampWithSoftDelete implements RoleMod
 
   @OneToMany(() => User, user => user.role)
   // users: User[];
-  users: UserModel[];
+  users: DUser[];
 }

@@ -1,8 +1,8 @@
-import { UserModel } from "../users";
+import { DUser } from "../users";
 
-export class RoleModel {
+export class DRole {
   id: string;
   name: string;
   description: string;
-  users: UserModel[];
+  users: DUser[];
 }

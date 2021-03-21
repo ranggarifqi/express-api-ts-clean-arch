@@ -5,8 +5,8 @@ import {
   Unique,
   ManyToOne,
 } from 'typeorm';
-import { RoleModel } from '../../../domain/roles';
-import { UserModel } from '../../../domain/users';
+import { DRole } from '../../../domain/roles';
+import { DUser } from '../../../domain/users';
 
 import { BaseTimestamp } from './baseTimestamp';
 import Role from './role';
@@ -14,7 +14,7 @@ import Role from './role';
 @Entity()
 @Unique(['email'])
 @Unique(['mobile'])
-export default class User extends BaseTimestamp implements UserModel {
+export default class User extends BaseTimestamp implements DUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -35,5 +35,5 @@ export default class User extends BaseTimestamp implements UserModel {
 
   @ManyToOne(() => Role, role => role.users)
   // role: Role;
-  role: RoleModel;
+  role: DRole;
 }
