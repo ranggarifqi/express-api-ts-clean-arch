@@ -1,9 +1,10 @@
-import express from "express";
+import express, { Express } from "express";
 import * as dotenv from "dotenv";
 
 import { serverConfig } from "./config";
 import createRoutes from "./routes";
 import { DBConnection } from "./database/index";
+import { Server } from "./domain/server"
 // import swaggerOptions from "./config/swagger";
 
 // import * as userRepository from "./database/default/repository/userRepository";
@@ -11,27 +12,33 @@ import { DBConnection } from "./database/index";
 dotenv.config();
 
 const init = async () => {
-  const server = express();
+  const app = express();
 
+  /** Create all DB Instances */
   const dbConnection = new DBConnection();
   await dbConnection.createInstance();
-  // const pgsqlConn = await dbConnection.getConnection()
 
   /** Global Middleware */
-  server.use(express.json());
+  app.use(express.json());
 
-  server.get("/", (req, res) => {
+  app.get("/", (req, res) => {
     return res.send("Hello World");
   });
 
-  /** Create routes */
-  createRoutes(server, '/api');
+  /** Construct Server Object */
+  const server: Server<Express, DBConnection> = {
+    app,
+    dbConn: dbConnection
+  }
 
-  server.get("*", (req, res) => {
+  /** Create routes */
+  await createRoutes(server, '/api');
+
+  app.get("*", (req, res) => {
     return res.send("Error 404: Page Not Found");
   });
 
-  server.listen(serverConfig.PORT, () => {
+  app.listen(serverConfig.PORT, () => {
     console.log(`⚡️[server]: Server is running at https://localhost:${serverConfig.PORT}`);
   });
 

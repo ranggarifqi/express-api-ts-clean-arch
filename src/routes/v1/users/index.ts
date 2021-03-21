@@ -1,12 +1,16 @@
 import { Express } from "express";
-import * as userController from './userController';
-import { filterSchema, userLoginDto } from '../../../shared/dtos';
+import * as userController from "./userController";
+import { filterSchema, userLoginDto } from "../../../shared/dtos";
+import { DBConnection } from "../../../database";
+import { Server } from "../../../domain/server";
 
-
-export default function (app: Express, basePath: string) {
-
+export default function (
+  server: Server<Express, DBConnection>,
+  basePath: string
+) {
+  const { app } = server;
   app.get(basePath, userController.findUser);
-  app.post(basePath + '/login', userController.loginUser);
+  app.post(basePath + "/login", userController.loginUser);
 
   // server.route({
   //   method: "GET",
