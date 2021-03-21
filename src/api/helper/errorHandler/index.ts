@@ -1,6 +1,5 @@
 import { Response } from "express";
-import { DErrorResponse } from "../../domain/common";
-import { HttpError } from '../../domain/common';
+import { DErrorResponse, HttpError } from "../../../domain/common";
 
 export const errorHandler = (res: Response, err: any) => {
   if (err instanceof HttpError) {
