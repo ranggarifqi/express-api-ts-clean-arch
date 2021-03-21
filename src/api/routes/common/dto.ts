@@ -3,7 +3,7 @@ import Joi from "joi";
 /**
  * How to use: https://typeorm.io/#/find-options
  */
-export const filterSchema = Joi.object({
+export const filterDto = Joi.object({
   take: Joi.number(),
   skip: Joi.number(),
   select: Joi.array().items(Joi.string()),

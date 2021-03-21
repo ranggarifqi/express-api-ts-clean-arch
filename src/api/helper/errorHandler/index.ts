@@ -1,6 +1,5 @@
 import { Response } from "express";
-import { HttpError } from '../classes/HttpError';
-import { IErrorResponse } from '../interfaces/response';
+import { DErrorResponse, HttpError } from "../../../domain/common";
 
 export const errorHandler = (res: Response, err: any) => {
   if (err instanceof HttpError) {
@@ -8,12 +7,12 @@ export const errorHandler = (res: Response, err: any) => {
       error: err.name,
       statusCode: err.status,
       message: err.message
-    } as IErrorResponse);
+    } as DErrorResponse);
   }
 
   return res.status(500).send({
     statusCode: 500,
     error: "Internal server error",
     message: err.message
-  } as IErrorResponse);
+  } as DErrorResponse);
 }
