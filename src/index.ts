@@ -2,7 +2,7 @@ import express, { Express } from "express";
 import * as dotenv from "dotenv";
 
 import { serverConfig } from "./config";
-import createRoutes from "./routes";
+import createRoutes from "./api/routes";
 import { DBConnection } from "./database/index";
 import { Server } from "./domain/server"
 // import swaggerOptions from "./config/swagger";

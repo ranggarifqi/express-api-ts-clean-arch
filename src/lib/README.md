@@ -1,11 +1,9 @@
 # Lib Folder
 
-We treat this folder as the most outer layer of Clean Arch Diagram. Which is Frameworks & Drivers
+We can store our internal helper function here.
 
-You can store any of your self made library here.
-And, if you want to do some domain level interface implementation. Please do it here
+Basically, the purpose of this folder is so we can implement DRY Principles. 
 
+If there are functions that used in many parts in our app, please put the function here.
 
-For example:
-1) Email service.
-If you want to create an email service, or different email service implementation. You need to create the domain level interface first (Let's say DEmailService). And then you create a folder here (for ex: nodemailer), and implement that interface.
+Usecase can use functions in this folder

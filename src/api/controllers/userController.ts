@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { errorHandler } from "../../../lib/errorHandler";
-import { DLoginUserDto, DUserUsecase } from "../../../domain/users";
-import { DSuccessResponse } from "../../../domain/common";
-import moduleLogger from "../../../lib/logger";
+import { errorHandler } from "../../lib/errorHandler";
+import { DLoginUserDto, DUserUsecase } from "../../domain/users";
+import { DSuccessResponse } from "../../domain/common";
+import moduleLogger from "../../lib/logger";
 
 const logger = moduleLogger("userController");
 

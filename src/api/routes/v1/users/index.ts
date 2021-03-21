@@ -1,10 +1,10 @@
 import { Express } from "express";
-import UserController from "./userController";
+import UserController from "../../../controllers/userController";
 // import { filterSchema, userLoginDto } from "../../../shared/dtos";
-import { DBConnection } from "../../../database";
-import { Server } from "../../../domain/server";
-import { UserRepository } from "../../../database/default/repository/userRepository";
-import { UserUsecase } from "../../../usecases/userUsecase";
+import { DBConnection } from "../../../../database";
+import { Server } from "../../../../domain/server";
+import { UserRepository } from "../../../../database/default/repository/userRepository";
+import { UserUsecase } from "../../../../usecases/userUsecase";
 
 export default async function (
   server: Server<Express, DBConnection>,
