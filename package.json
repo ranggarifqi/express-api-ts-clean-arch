@@ -1,0 +1,52 @@
+{
+  "name": "rpr-pos-be",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node ./dist/index.js",
+    "dev": "NODE_ENV=development nodemon",
+    "test": "jest",
+    "migrate": "ts-node ./node_modules/typeorm/cli.js migration:run",
+    "migrate:create": "ts-node ./node_modules/typeorm/cli.js migration:create",
+    "migrate:generate": "ts-node ./node_modules/typeorm/cli.js migration:generate"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.0.2",
+    "@hapi/inert": "^6.0.3",
+    "@hapi/vision": "^6.0.1",
+    "@types/express": "^4.17.11",
+    "bcrypt": "^5.0.0",
+    "body-parser": "^1.19.0",
+    "date-fns": "^2.16.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "hapi-auth-jwt2": "^10.2.0",
+    "hapi-cors": "^1.0.3",
+    "hapi-swagger": "^14.0.0",
+    "joi": "^17.3.0",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.5.0",
+    "qs": "^6.9.4",
+    "typeorm": "^0.2.29",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
+    "@types/hapi": "^18.0.4",
+    "@types/hapi__hapi": "^20.0.2",
+    "@types/jest": "^26.0.15",
+    "@types/joi": "^14.3.4",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/node": "^14.14.7",
+    "@types/qs": "^6.9.5",
+    "jest": "^26.6.3",
+    "nodemon": "^2.0.6",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.0.0",
+    "typescript": "^4.0.5"
+  }
+}
