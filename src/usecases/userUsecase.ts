@@ -1,19 +1,108 @@
 import * as jwt from "jsonwebtoken";
 
-import { IRegisterUser, ILoginUser, ILoginUserResult } from '../shared/interfaces/user';
-import User from '../database/default/entity/user';
-import { generatepassword } from '../shared/functions';
-import * as userRepository from '../database/default/repository/userRepository';
-import { FindManyOptions, FindOneOptions } from 'typeorm';
-import { HttpError } from '../shared/classes/HttpError';
-import { comparepassword } from '../shared/functions/commons';
-import { serverConfig } from '../config/server';
+import {
+  IRegisterUser,
+  ILoginUser,
+  ILoginUserResult,
+} from "../shared/interfaces/user";
+import User from "../database/default/entity/user";
+import { generatepassword } from "../shared/functions";
+import * as userRepository from "../database/default/repository/userRepository";
+import { FindConditions, FindManyOptions, FindOneOptions } from "typeorm";
+import { HttpError } from "../shared/classes/HttpError";
+import { comparepassword } from "../shared/functions/commons";
+import { serverConfig } from "../config/server";
+import {
+  DLoginUserDto,
+  DLoginUserResult,
+  DRegisterUserDto,
+  DUser,
+  DUserRepository,
+  DUserUsecase,
+} from "../domain/users";
 
-export const findUsers = async (opts: FindManyOptions<User>): Promise<User[]> => {
+export class UserUsecase implements DUserUsecase {
+  private userRepository: DUserRepository;
+
+  constructor(userRepository: DUserRepository) {
+    this.userRepository = userRepository;
+  }
+
+  async findUsers(opt: FindManyOptions<User>): Promise<DUser[]> {
+    return this.userRepository.find(opt);
+  }
+
+  async findUserById(id: string, opt: FindOneOptions<User>): Promise<DUser> {
+    return this.userRepository.findById(id, opt);
+  }
+
+  async registerUser(payload: DRegisterUserDto): Promise<DUser> {
+    const newUser = new User();
+    newUser.email = payload.email;
+    newUser.mobile = payload.mobile;
+    newUser.password = await generatepassword(payload.password);
+    newUser.roleId = payload.roleId;
+
+    return this.userRepository.create(newUser);
+  }
+
+  async login(payload: DLoginUserDto): Promise<DLoginUserResult> {
+    const user = await this.userRepository.findOne<
+      FindConditions<User>,
+      FindOneOptions<User>
+    >(
+      {
+        email: payload.email,
+      },
+      {
+        select: ["id", "email", "mobile", "isActive", "password"],
+        relations: ["role"],
+      }
+    );
+    if (!user) {
+      throw new HttpError(401, "Incorrect email or password");
+    }
+
+    const correctPass = await comparepassword(payload.password, user.password);
+
+    if (!correctPass) {
+      throw new HttpError(401, "Incorrect email or password");
+    }
+
+    if (!user.isActive) {
+      throw new HttpError(403, "Inactive user");
+    }
+
+    const jwtPayload = {
+      id: user.id,
+      email: user.email,
+      role: user.role.name,
+    };
+
+    const token = jwt.sign(jwtPayload, serverConfig.AUTH_TOKEN.SECRET, {
+      expiresIn: serverConfig.AUTH_TOKEN.EXPIRE_HRS + "h",
+    });
+
+    return {
+      id: user.id,
+      email: user.email,
+      mobile: user.mobile,
+      role: user.role.name,
+      token,
+    };
+  }
+}
+
+export const findUsers = async (
+  opts: FindManyOptions<User>
+): Promise<User[]> => {
   return userRepository.find(opts);
 };
 
-export const findUserById = async (userId: string, opts?: FindOneOptions<User>) => {
+export const findUserById = async (
+  userId: string,
+  opts?: FindOneOptions<User>
+) => {
   return userRepository.findById(userId, opts);
 };
 
@@ -28,12 +117,15 @@ export const registerUser = async (payload: IRegisterUser): Promise<User> => {
 };
 
 export const login = async (payload: ILoginUser): Promise<ILoginUserResult> => {
-  const user = await userRepository.findOne({
-    email: payload.email
-  }, {
-    select: ["id", "email", "mobile", "isActive", "password"],
-    relations: ["role"]
-  });
+  const user = await userRepository.findOne(
+    {
+      email: payload.email,
+    },
+    {
+      select: ["id", "email", "mobile", "isActive", "password"],
+      relations: ["role"],
+    }
+  );
   if (!user) {
     throw new HttpError(401, "Incorrect email or password");
   }
@@ -51,11 +143,11 @@ export const login = async (payload: ILoginUser): Promise<ILoginUserResult> => {
   const jwtPayload = {
     id: user.id,
     email: user.email,
-    role: user.role.name
+    role: user.role.name,
   };
-  
+
   const token = jwt.sign(jwtPayload, serverConfig.AUTH_TOKEN.SECRET, {
-    expiresIn: serverConfig.AUTH_TOKEN.EXPIRE_HRS + 'h'
+    expiresIn: serverConfig.AUTH_TOKEN.EXPIRE_HRS + "h",
   });
 
   return {
@@ -63,6 +155,6 @@ export const login = async (payload: ILoginUser): Promise<ILoginUserResult> => {
     email: user.email,
     mobile: user.mobile,
     role: user.role.name,
-    token
+    token,
   };
 };
