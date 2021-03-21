@@ -4,34 +4,32 @@ import moduleLogger from '../shared/functions/logger';
 
 const logger = moduleLogger('database');
 
-export const dbConnection = (() => {
-  let connections: Connection[];
+export class DBConnection {
+  private connections: Connection[];
 
-  const createInstance = async (): Promise<Connection[]> => {
+  async createInstance(): Promise<void> {
     try {
-      return await createConnections();
+      logger.info('Creating new database connection...');
+      this.connections = await createConnections();
     } catch (e) {
-      console.log(e);
+      logger.error(e)
       return Promise.reject(e);
     }
-  };
+  }
 
-  return {
-    getConnection: async (connectionName = 'default'): Promise<Connection> => {
-      if (!connections) {
-        logger.info('Creating new database connection...');
-        connections = await createInstance();
-      }
+  async getConnection(connectionName = 'default'): Promise<Connection> {
+    if (!this.connections) {
+      await this.createInstance();
+    }
 
-      const conn = connections.find(v => {
-        return v.name === connectionName;
-      });
+    const conn = this.connections.find(v => {
+      return v.name === connectionName;
+    });
 
-      if (!conn) {
-        throw new Error(`Connection ${connectionName} not found`);
-      }
+    if (!conn) {
+      throw new Error(`Connection ${connectionName} not found`);
+    }
 
-      return conn;
-    },
-  };
-})();
+    return conn;
+  }
+}

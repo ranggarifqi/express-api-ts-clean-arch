@@ -40,11 +40,19 @@ const moduleLogger = (moduleName?: string): ModuleLogger => {
         logger.info(message, meta);
       }
     },
+    error: (error: Error, ...meta: unknown[]) => {
+      if (moduleName) {
+        logger.error(`[${moduleName}] ${error.message}`, meta);
+      } else {
+        logger.error(error.message, meta);
+      }
+    },
   };
 };
 
 interface ModuleLogger {
   info: (message: string, ...meta: unknown[]) => void;
+  error: (error: Error, ...meta: unknown[]) => void;
 }
 
 export default moduleLogger;

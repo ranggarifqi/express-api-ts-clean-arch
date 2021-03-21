@@ -7,8 +7,13 @@ import {
   FindConditions,
 } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+// import { DUserRepository } from '../../../domain/users';
 
 const logger = moduleLogger('userRepository');
+
+// export class UserRepository implements DUserRepository {
+
+// }
 
 export const find = async (opts: FindManyOptions<User>): Promise<User[]> => {
   logger.info('Find users');

@@ -3,7 +3,7 @@ import * as dotenv from "dotenv";
 
 import { serverConfig } from "./config";
 import createRoutes from "./routes";
-import { dbConnection } from "./database/index";
+import { DBConnection } from "./database/index";
 // import swaggerOptions from "./config/swagger";
 
 // import * as userRepository from "./database/default/repository/userRepository";
@@ -13,7 +13,9 @@ dotenv.config();
 const init = async () => {
   const server = express();
 
-  dbConnection.getConnection();
+  const dbConnection = new DBConnection();
+  await dbConnection.createInstance();
+  // const pgsqlConn = await dbConnection.getConnection()
 
   /** Global Middleware */
   server.use(express.json());
