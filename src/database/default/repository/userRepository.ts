@@ -1,8 +1,7 @@
 import User from '../entity/user';
-import moduleLogger from '../../../shared/functions/logger';
+import moduleLogger from '../../../lib/logger';
 import {
   FindOneOptions,
-  getRepository,
   FindManyOptions,
   FindConditions,
   Connection,

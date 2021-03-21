@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { Connection, createConnections } from 'typeorm';
-import moduleLogger from '../shared/functions/logger';
+import moduleLogger from '../lib/logger';
 
 const logger = moduleLogger('database');
 

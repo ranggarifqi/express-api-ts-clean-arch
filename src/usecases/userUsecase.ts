@@ -1,10 +1,10 @@
 import * as jwt from "jsonwebtoken";
 
 import User from "../database/default/entity/user";
-import { generatepassword } from "../shared/functions";
+import { generatepassword } from "../lib/functions";
 import { FindConditions, FindManyOptions, FindOneOptions } from "typeorm";
-import { HttpError } from "../shared/classes/HttpError";
-import { comparepassword } from "../shared/functions/commons";
+import { HttpError } from "../lib/classes/HttpError";
+import { comparepassword } from "../lib/functions/commons";
 import { serverConfig } from "../config/server";
 import {
   DLoginUserDto,
@@ -14,7 +14,7 @@ import {
   DUserRepository,
   DUserUsecase,
 } from "../domain/users";
-import moduleLogger from "../shared/functions/logger";
+import moduleLogger from "../lib/logger";
 
 const logger = moduleLogger("userUsecase");
 
