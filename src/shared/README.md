@@ -1,6 +1,4 @@
-# Lib Folder
-
-We can store our internal helper function here.
+# Shared Folder
 
 Basically, the purpose of this folder is so we can implement DRY Principles. 
 

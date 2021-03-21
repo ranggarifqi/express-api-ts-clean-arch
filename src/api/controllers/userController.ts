@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { errorHandler } from "../helper/errorHandler";
 import { DLoginUserDto, DUserUsecase } from "../../domain/users";
 import { DSuccessResponse } from "../../domain/common";
-import moduleLogger from "../../lib/logger";
+import moduleLogger from "../../shared/logger";
 
 const logger = moduleLogger("userController");
 

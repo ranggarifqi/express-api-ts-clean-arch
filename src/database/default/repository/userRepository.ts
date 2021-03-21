@@ -1,5 +1,5 @@
 import User from '../entity/user';
-import moduleLogger from '../../../lib/logger';
+import moduleLogger from '../../../shared/logger';
 import {
   FindOneOptions,
   FindManyOptions,
