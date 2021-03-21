@@ -14,6 +14,7 @@ export default async function (
 
   const pgConn = await dbConn.getConnection();
 
+  /** We stitch the implementation together here */
   const userRepository = new UserRepository(pgConn);
   const userUsecase = new UserUsecase(userRepository);
   const userController = new UserController(userUsecase);
