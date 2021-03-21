@@ -3,7 +3,7 @@
  * @property status
  * @property message
  */
-export class HttpError extends Error {
+ export class HttpError extends Error {
   public status: number;
 
   public message: string;
