@@ -31,7 +31,7 @@ export const login = async (payload: ILoginUser): Promise<ILoginUserResult> => {
   const user = await userRepository.findOne({
     email: payload.email
   }, {
-    select: ["id", "email", "mobile", "active", "password"],
+    select: ["id", "email", "mobile", "isActive", "password"],
     relations: ["role"]
   });
   if (!user) {
@@ -44,7 +44,7 @@ export const login = async (payload: ILoginUser): Promise<ILoginUserResult> => {
     throw new HttpError(401, "Incorrect email or password");
   }
 
-  if (!user.active) {
+  if (!user.isActive) {
     throw new HttpError(403, "Inactive user");
   }
 
