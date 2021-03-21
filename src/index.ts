@@ -1,10 +1,12 @@
 import express, { Express } from "express";
 import * as dotenv from "dotenv";
+import passport from "passport";
 
 import { serverConfig } from "./config";
 import createRoutes from "./api/routes";
 import { DBConnection } from "./database/index";
-import { Server } from "./domain/server"
+import { Server } from "./domain/server";
+import { createJWTStrategy } from "./api/helper/passport/jwtStrategy";
 // import swaggerOptions from "./config/swagger";
 
 // import * as userRepository from "./database/default/repository/userRepository";
@@ -21,6 +23,9 @@ const init = async () => {
   /** Global Middleware */
   app.use(express.json());
 
+  /** Passport */
+  passport.use(await createJWTStrategy(dbConnection));
+
   app.get("/", (req, res) => {
     return res.send("Hello World");
   });
@@ -28,18 +33,20 @@ const init = async () => {
   /** Construct Server Object */
   const server: Server<Express, DBConnection> = {
     app,
-    dbConn: dbConnection
-  }
+    dbConn: dbConnection,
+  };
 
   /** Create routes */
-  await createRoutes(server, '/api');
+  await createRoutes(server, "/api");
 
   app.get("*", (req, res) => {
     return res.send("Error 404: Page Not Found");
   });
 
   app.listen(serverConfig.PORT, () => {
-    console.log(`⚡️[server]: Server is running at https://localhost:${serverConfig.PORT}`);
+    console.log(
+      `⚡️[server]: Server is running at https://localhost:${serverConfig.PORT}`
+    );
   });
 
   // const server = HapiServer({

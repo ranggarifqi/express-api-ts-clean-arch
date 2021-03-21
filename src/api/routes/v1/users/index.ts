@@ -5,6 +5,7 @@ import { DBConnection } from "../../../../database";
 import { Server } from "../../../../domain/server";
 import { UserRepository } from "../../../../database/default/repository/userRepository";
 import { UserUsecase } from "../../../../usecases/userUsecase";
+import { jwtAuth } from "../../../middleware/auth";
 
 export default async function (
   server: Server<Express, DBConnection>,
@@ -19,7 +20,7 @@ export default async function (
   const userUsecase = new UserUsecase(userRepository);
   const userController = new UserController(userUsecase);
 
-  app.get(basePath, userController.findUsers());
+  app.get(basePath, jwtAuth, userController.findUsers());
   app.post(basePath + "/login", userController.loginUser());
 
   // server.route({
