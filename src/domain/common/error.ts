@@ -8,8 +8,9 @@
 
   public message: string;
 
-  constructor(status: number, message: string) {
+  constructor(status: number, message: string, name?: string) {
     super(message);
+    this.name = name || 'Error';
     this.status = status;
     this.message = message;
   }

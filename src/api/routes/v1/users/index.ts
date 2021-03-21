@@ -1,11 +1,11 @@
 import { Express } from "express";
 import UserController from "../../../controllers/userController";
-// import { filterSchema, userLoginDto } from "../../../shared/dtos";
 import { DBConnection } from "../../../../database";
 import { Server } from "../../../../domain/server";
 import { UserRepository } from "../../../../database/default/repository/userRepository";
 import { UserUsecase } from "../../../../usecases/userUsecase";
-import { jwtAuth } from "../../../middleware/auth";
+import { jwtAuth, validate } from "../../../middleware";
+import { userLoginDto } from "./dto";
 
 export default async function (
   server: Server<Express, DBConnection>,
@@ -21,34 +21,11 @@ export default async function (
   const userController = new UserController(userUsecase);
 
   app.get(basePath, jwtAuth, userController.findUsers());
-  app.post(basePath + "/login", userController.loginUser());
-
-  // server.route({
-  //   method: "GET",
-  //   path: basePath,
-  //   handler: userController.findUser,
-  //   options: {
-  //     auth: 'jwt',
-  //     description: 'Get users with filter',
-  //     notes: 'Get all users if filter is not specified.',
-  //     tags: ['api', 'user'],
-  //     validate: {
-  //       query: filterSchema
-  //     },
-  //   }
-  // });
-
-  // server.route({
-  //   method: "POST",
-  //   path: basePath + "/login",
-  //   handler: userController.loginUser,
-  //   options: {
-  //     description: 'Login user',
-  //     notes: 'Login user by email & password',
-  //     tags: ['api', 'user'],
-  //     validate: {
-  //       payload: userLoginDto
-  //     }
-  //   }
-  // });
+  app.post(
+    basePath + "/login",
+    validate({
+      body: userLoginDto,
+    }),
+    userController.loginUser()
+  );
 }
