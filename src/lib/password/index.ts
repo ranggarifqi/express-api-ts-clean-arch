@@ -1,11 +1,5 @@
 import * as bcrypt from 'bcrypt';
 import { serverConfig } from '../../config';
-/**
- * Sample Utility method
- */
-export const sampleUtilMethod = (): unknown => {
-  return {};
-};
 
 export const generatepassword = async (
   password: string
@@ -16,4 +10,3 @@ export const generatepassword = async (
 export const comparepassword = async(password: string, hash: string): Promise<boolean> => {
   return await bcrypt.compare(password, hash);
 };
-

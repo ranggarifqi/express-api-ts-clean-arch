@@ -1,10 +1,9 @@
 import * as jwt from "jsonwebtoken";
 
 import User from "../database/default/entity/user";
-import { generatepassword } from "../lib/functions";
+import { generatepassword, comparepassword } from "../lib/password";
 import { FindConditions, FindManyOptions, FindOneOptions } from "typeorm";
 import { HttpError } from "../domain/common";
-import { comparepassword } from "../lib/functions/commons";
 import { serverConfig } from "../config/server";
 import {
   DLoginUserDto,
