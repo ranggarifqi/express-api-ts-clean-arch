@@ -1,4 +1,4 @@
-# Rangga's Point Of Sales
+# Rangga's Express API Typescript with Clean Architecture
 
 ## Stacks
 - Framework: Express JS
